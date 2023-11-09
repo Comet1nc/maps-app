@@ -1,0 +1,131 @@
+html,
+body {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  font-family: Verdana, sans-serif;
+}
+p {
+  margin: 0;
+}
+.container {
+  display: flex;
+  height: 100%;
+}
+#myMap {
+  position: relative;
+  height: 100%;
+  float: right;
+}
+.directionsContainer {
+  width: 378px;
+  height: 100%;
+  overflow-y: auto;
+  float: left;
+}
+.directionsContainer > span {
+  position: absolute;
+  text-align: center;
+  color: #717171;
+  padding: 90px;
+  z-index: -1;
+}
+.directionsPanel {
+  background-color: #fff;
+}
+.right-panel {
+  width: calc(100% - 950px - 380px);
+}
+#searchBox {
+  height: 40px;
+  font-size: 20px;
+  width: 97%;
+  border: 1px solid black;
+}
+.selected-cities {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  padding: 30px 0;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+  gap: 20px;
+  min-height: 50px;
+  overflow-y: auto;
+  height: 450px;
+  margin: 0;
+}
+.selected-cities > li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 15px;
+  height: 50px;
+  background-color: #e3e3e3;
+}
+.selected-cities > li > button {
+  border: none;
+  background: none;
+  height: 100%;
+  width: 40px;
+}
+.selected-cities > li > button:hover {
+  background-color: #d5d5d5;
+}
+.selected-cities > li > p {
+  margin: auto 0;
+}
+.selected-cities > span {
+  display: none;
+  text-align: center;
+  color: #717171;
+}
+.selected-cities > span:only-child {
+  display: block;
+  margin: auto;
+}
+.right-panel > button {
+  background-color: #d5d5d5;
+  border: none;
+  width: 100%;
+  height: 50px;
+}
+.right-panel > button:hover {
+  background-color: #c6c6c6;
+}
+.alerts-container {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  bottom: 40px;
+  left: 0;
+  right: 0;
+  width: 400px;
+  margin: 0 auto;
+  gap: 20px;
+}
+.alert {
+  display: flex;
+  justify-content: space-between;
+  background-color: #fff;
+  border-radius: 15px;
+  text-align: center;
+  width: 400px;
+  padding: 15px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+.alert > p {
+  width: 365px;
+  margin: auto 0;
+}
+.alert > button {
+  border: none;
+  border-radius: 50%;
+  background-color: #e3e3e3;
+  height: 25px;
+  width: 25px;
+  margin: auto 0;
+}
+.alert > button:hover {
+  background-color: #c5c5c5;
+}

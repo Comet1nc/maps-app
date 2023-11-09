@@ -3,10 +3,40 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Maps</title>
+    <script
+      type="text/javascript"
+      src="http://www.bing.com/api/maps/mapcontrol?key=AsXAy83rgB45bEKif3lCbGbtzY9khFXS_Lb3HYw68KWRgACzHO7jqq_oA8bV9Nz9"
+      async
+      defer
+    ></script>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    hello
+    <div class="container">
+      <aside class="right-panel">
+        <div id="searchBoxContainer">
+          <input type="text" id="searchBox" placeholder="Enter a city name" />
+        </div>
+        <ul class="selected-cities">
+          <span>NO CITIES SELECTED</span>
+        </ul>
+        <button class="save-route">SAVE ROUTE</button>
+        <button class="load-route">LOAD ROUTE</button>
+      </aside>
+      <main>
+        <div
+          id="myMap"
+          style="position: relative; width: 950px; height: 100%"
+        ></div>
+      </main>
+      <aside class="directionsContainer">
+        <span>YOU NEED AT LEAST 2 POINTS TO BUILD A ROUTE</span>
+        <div id="directionsPanel"></div>
+        <div id="directionsItinerary"></div>
+      </aside>
+    </div>
+    <div class="alerts-container"></div>
+    <script src="main.js" type="module"></script>
   </body>
-  <script src="main.js" type="module"></script>
 </html>
