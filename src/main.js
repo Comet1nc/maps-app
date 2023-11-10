@@ -1,4 +1,4 @@
-import { displayCities } from "./features/map.js";
+import { selectCity } from "./features/map.js";
 import * as routes from "./features/routes.js";
 
 export let map;
@@ -38,7 +38,7 @@ function useMicrosoftMaps() {
 }
 
 function selectedSuggestion(result) {
-  displayCities({
+  selectCity({
     name: result.address.locality,
     location: result.location,
   });

@@ -8,6 +8,14 @@ body {
 p {
   margin: 0;
 }
+button {
+  border: none;
+  background: inherit;
+}
+button:hover {
+  transition: background-color 0.1s linear;
+  filter: brightness(90%);
+}
 .container {
   display: flex;
   height: 100%;
@@ -33,7 +41,7 @@ p {
 .directionsPanel {
   background-color: #fff;
 }
-.right-panel {
+.left-panel {
   width: calc(100% - 950px - 380px);
 }
 #searchBox {
@@ -41,6 +49,7 @@ p {
   font-size: 20px;
   width: 97%;
   border: 1px solid black;
+  background-color: #f0f0f0;
 }
 .selected-cities {
   display: flex;
@@ -61,19 +70,19 @@ p {
   justify-content: space-between;
   padding-left: 15px;
   height: 50px;
-  background-color: #e3e3e3;
+  background-color: #d5d5d5;
+}
+.selected-cities > li:hover {
+  background-color: #cdcdcd;
+  transition: background-color 0.1s linear;
 }
 .selected-cities > li > button {
-  border: none;
-  background: none;
   height: 100%;
   width: 40px;
 }
-.selected-cities > li > button:hover {
-  background-color: #d5d5d5;
-}
 .selected-cities > li > p {
   margin: auto 0;
+  font-size: 20px;
 }
 .selected-cities > span {
   display: none;
@@ -84,14 +93,10 @@ p {
   display: block;
   margin: auto;
 }
-.right-panel > button {
+.left-panel > button {
   background-color: #d5d5d5;
-  border: none;
   width: 100%;
   height: 50px;
-}
-.right-panel > button:hover {
-  background-color: #c6c6c6;
 }
 .alerts-container {
   position: absolute;
@@ -103,6 +108,7 @@ p {
   width: 400px;
   margin: 0 auto;
   gap: 20px;
+  z-index: 200;
 }
 .alert {
   display: flex;
@@ -119,13 +125,110 @@ p {
   margin: auto 0;
 }
 .alert > button {
-  border: none;
   border-radius: 50%;
-  background-color: #e3e3e3;
+  background-color: #d5d5d5;
   height: 25px;
   width: 25px;
   margin: auto 0;
 }
-.alert > button:hover {
-  background-color: #c5c5c5;
+.form-overlay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 100;
+}
+.form-container {
+  display: flex;
+  position: absolute;
+  margin: auto;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 600px;
+  height: 50px;
+  background-color: #fff;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
+    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+.form-container > input {
+  border-radius: 0;
+  width: 60%;
+  font-size: 20px;
+}
+.form-container > button {
+  background-color: #d5d5d5;
+  width: 20%;
+  font-size: 20px;
+}
+.routes-list-overlay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 100;
+}
+.routes-list-container {
+  position: absolute;
+  margin: auto;
+  padding: 35px;
+  border-radius: 15px;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 600px;
+  height: 50%;
+  background-color: #fff;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
+    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+.routes-list-container > button {
+  position: absolute;
+  text-align: center;
+  padding: 0;
+  right: 6px;
+  top: 8px;
+  border-radius: 50%;
+  background-color: #d5d5d5;
+  height: 25px;
+  width: 25px;
+  margin: auto 0;
+}
+.routes-list {
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0;
+  margin: 0;
+}
+.routes-list > p {
+  text-align: center;
+  color: #717171;
+}
+.routes-list > li {
+  background-color: #d5d5d5;
+  display: flex;
+  border-radius: 5px;
+  padding: 5px;
+  gap: 20px;
+  width: 100%;
+  font-size: 20px;
+  box-sizing: border-box;
+}
+.routes-list > li > p {
+  width: 60%;
+}
+.routes-list > li > button {
+  width: 20%;
+  font-size: 20px;
+  border-radius: 5px;
 }

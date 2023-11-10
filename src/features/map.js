@@ -21,31 +21,29 @@ export let cities = [
   // },
 ];
 
-export function displayCities(city) {
+export function selectCity(city) {
   cities.push(city);
 
   renderListWithNewCity(city);
 
-  recalculatePath();
+  calculatePath();
 
   togglePushpinForSingleCity();
 
-  rerenderMap();
-
-  console.log(cities);
+  renderMap();
 }
 
-function recalculatePath() {
+function calculatePath() {
   if (cities.length < 2) return;
   cities.sort((cityA, cityB) => {
-    if (cityA.location.latitude !== cityB.location.latitude) {
-      return cityA.location.latitude - cityB.location.latitude;
-    }
-    return cityA.location.longitude - cityB.location.longitude;
+    let diff = cityA.location.latitude - cityB.location.latitude;
+    let diff2 = cityA.location.longitude - cityB.location.longitude;
+
+    return diff + diff2;
   });
 }
 
-export function rerenderMap() {
+export function renderMap() {
   directionsManager.clearAll();
   for (let city of cities) {
     let point = new Microsoft.Maps.Directions.Waypoint({
@@ -80,6 +78,12 @@ function togglePushpinForSingleCity() {
 }
 
 function renderListWithNewCity(city) {
+  let li = getCityElement(city);
+
+  document.querySelector(".selected-cities").appendChild(li);
+}
+
+export function getCityElement(city) {
   let li = document.createElement("li");
   let p = document.createElement("p");
   let btn = document.createElement("button");
@@ -93,8 +97,7 @@ function renderListWithNewCity(city) {
     let i = cities.findIndex((city1) => city1.name === city.name);
     removeCityFromMap(i);
     cities.splice(i, 1);
-    // cities[i] = {};
   });
 
-  document.querySelector(".selected-cities").appendChild(li);
+  return li;
 }
