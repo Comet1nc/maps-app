@@ -1,25 +1,6 @@
 import { directionsManager, map } from "../main.js";
 
-export let cities = [
-  // {
-  //   name: "Radom",
-  //   location: {
-  //     latitude: 51.4067,
-  //     longitude: 21.1254,
-  //     altitude: 0,
-  //     altitudeReference: -1,
-  //   },
-  // },
-  // {
-  //   name: "Warszawa",
-  //   location: {
-  //     latitude: 52.235,
-  //     longitude: 21.0085,
-  //     altitude: 0,
-  //     altitudeReference: -1,
-  //   },
-  // },
-];
+export let cities = [];
 
 export function selectCity(city) {
   cities.push(city);

@@ -19,17 +19,19 @@ button:hover {
 .container {
   display: flex;
   height: 100%;
+  margin: 0 auto;
+  max-width: 1600px;
 }
 #myMap {
   position: relative;
+  width: 60%;
   height: 100%;
   float: right;
 }
 .directionsContainer {
-  width: 378px;
+  width: 380px;
   height: 100%;
   overflow-y: auto;
-  float: left;
 }
 .directionsContainer > span {
   position: absolute;
@@ -37,15 +39,19 @@ button:hover {
   color: #717171;
   padding: 90px;
   z-index: -1;
+  max-width: 270px;
 }
 .directionsPanel {
   background-color: #fff;
 }
 .left-panel {
-  width: calc(100% - 950px - 380px);
+  width: 270px;
+}
+#searchBoxContainer {
+  height: 6%;
 }
 #searchBox {
-  height: 40px;
+  height: 100%;
   font-size: 20px;
   width: 97%;
   border: 1px solid black;
@@ -61,7 +67,7 @@ button:hover {
   gap: 20px;
   min-height: 50px;
   overflow-y: auto;
-  height: 450px;
+  height: 72%;
   margin: 0;
 }
 .selected-cities > li {
@@ -96,7 +102,7 @@ button:hover {
 .left-panel > button {
   background-color: #d5d5d5;
   width: 100%;
-  height: 50px;
+  height: 7%;
 }
 .alerts-container {
   position: absolute;

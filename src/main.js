@@ -1,5 +1,6 @@
 import { selectCity } from "./features/map.js";
-import * as routes from "./features/routes.js";
+import * as saveroutes from "./features/save-routes.js";
+import * as loadroutes from "./features/load-routes.js";
 
 export let map;
 export let directionsManager;
@@ -31,9 +32,6 @@ function useMicrosoftMaps() {
     directionsManager.setRenderOptions({
       itineraryContainer: "#directionsItinerary",
     });
-
-    // TEST
-    // rerenderMap();
   });
 }
 
