@@ -22,7 +22,7 @@ function useMicrosoftMaps() {
     manager.attachAutosuggest(
       "#searchBox",
       "#searchBoxContainer",
-      selectedSuggestion
+      selectedSuggestion // Callback reaguje na wybór miejsca w wyszukiwarce.
     );
   });
 

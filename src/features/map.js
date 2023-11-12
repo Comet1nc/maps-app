@@ -2,6 +2,8 @@ import { directionsManager, map } from "../main.js";
 
 export let cities = [];
 
+export const selectedCities = document.querySelector(".selected-cities");
+
 export function selectCity(city) {
   cities.push(city);
 
@@ -61,7 +63,7 @@ function togglePushpinForSingleCity() {
 function renderListWithNewCity(city) {
   let li = getCityElement(city);
 
-  document.querySelector(".selected-cities").appendChild(li);
+  selectedCities.appendChild(li);
 }
 
 export function getCityElement(city) {

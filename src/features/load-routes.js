@@ -1,4 +1,4 @@
-import { cities, getCityElement, renderMap } from "./map.js";
+import { cities, getCityElement, renderMap, selectedCities } from "./map.js";
 import { alert } from "./alerts.js";
 
 const loadBtn = document.querySelector(".btn-load-route");
@@ -78,32 +78,33 @@ function loadRoute(route) {
     let li = getCityElement(city);
     dcities.push(li);
   }
-  document.querySelector(".selected-cities").replaceChildren(...dcities);
+  selectedCities.replaceChildren(...dcities);
 
   renderMap();
 }
 
 function deleteRoute(route) {
-  fetchRoutes().then((routes) => {
-    let arr = Object.values(routes);
-    const i = arr.findIndex((r) => r.name === route.name);
-    arr.splice(i, 1);
+  fetchRoutes()
+    .then((routes) => {
+      let arr = Object.values(routes);
+      const i = arr.findIndex((r) => r.name === route.name);
+      arr.splice(i, 1);
 
-    fetch(
-      "https://maps-app-f38f1-default-rtdb.europe-west1.firebasedatabase.app/routes.json",
-      {
-        method: "PUT",
-        body: JSON.stringify(arr),
-      }
-    )
-      .then(() => {
-        alert("Succesfully deleted route!", 5000);
-        updateRoutesList(arr);
-      })
-      .catch(() => {
-        console.error("PUT ERROR");
-      });
-  });
+      return fetch(
+        "https://maps-app-f38f1-default-rtdb.europe-west1.firebasedatabase.app/routes.json",
+        {
+          method: "PUT",
+          body: JSON.stringify(arr),
+        }
+      );
+    })
+    .then(() => {
+      alert("Succesfully deleted route!", 5000);
+      updateRoutesList(arr);
+    })
+    .catch(() => {
+      console.error("PUT ERROR");
+    });
 }
 
 function updateRoutesList(routes) {
