@@ -1,13 +1,32 @@
+const alerts = [];
+
+let counter = 0;
+
 let container = document.querySelector(".alerts-container");
 
-const alerts = [];
+container.addEventListener("click", (e) => {
+  if (e.target.localName === "button") {
+    const id = e.target.parentNode.id;
+    const i = alerts.findIndex((e) => e.id === id);
+    const alert = alerts.splice(i, 1);
+    alert[0].remove();
+  }
+});
 
 export function alert(text, ms) {
   let alert = document.createElement("div");
+  alert.id = counter++;
+  alert.classList.add("alert");
 
-  renderAlert(alert, text);
+  alert.innerHTML = `
+  <p>${text}</p>
+  <button>X</button>
+  `;
+
+  container.append(alert);
 
   setTimeout(() => {
+    alerts.shift();
     alert.remove();
   }, ms);
 
@@ -17,15 +36,4 @@ export function alert(text, ms) {
     let el = alerts.shift();
     el.remove();
   }
-}
-
-function renderAlert(alert, text) {
-  alert.classList.add("alert");
-  let p = document.createElement("p");
-  p.innerText = text;
-  let btn = document.createElement("button");
-  btn.innerText = "X";
-  btn.addEventListener("click", () => alert.remove());
-  alert.append(p, btn);
-  container.append(alert);
 }

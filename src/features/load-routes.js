@@ -1,64 +1,87 @@
-import { cities, getCityElement, renderMap } from "./map.js";
+import { cities, getCityElement, renderMap, selectedCities } from "./map.js";
 import { alert } from "./alerts.js";
 
 const loadBtn = document.querySelector(".btn-load-route");
+const routesList = document.querySelector(".routes-list-container");
+
+let routes;
+
+routesList.addEventListener("click", (e) => {
+  if (e.target.classList.contains("close-btn")) {
+    closeRoutesTab();
+  } else if (e.target.classList.contains("load-btn")) {
+    const name = getRouteName(e);
+    if (name) loadRoute(name);
+  } else if (e.target.classList.contains("delete-btn")) {
+    const name = getRouteName(e);
+    if (name) deleteRoute(name);
+  }
+});
 
 loadBtn.addEventListener("click", () => {
   loadBtn.disabled = true;
   showListOfRoutes();
 });
 
-function createRoutesList(routes) {
-  let overlay = document.createElement("div");
-  overlay.classList.add("routes-list-overlay");
-  let container = document.createElement("div");
-  container.classList.add("routes-list-container");
-  let list = document.createElement("ul");
-  list.classList.add("routes-list");
-  let closeBtn = document.createElement("button");
-  closeBtn.innerText = "X";
-  closeBtn.addEventListener("click", () => {
-    overlay.remove();
-    loadBtn.disabled = false;
-  });
-  container.append(closeBtn);
+function closeRoutesTab() {
+  loadBtn.disabled = false;
+  while (routesList.firstChild) {
+    routesList.removeChild(routesList.lastChild);
+  }
+}
+
+function getRouteName(e) {
+  let item = e.target.closest("[route-name]");
+  if (item) {
+    let name = item.getAttribute("route-name");
+    return name;
+  }
+}
+
+function createRoutesList() {
+  let ulhtml = ``;
   if (routes) {
-    for (let route of Object.values(routes)) {
+    for (let route of routes) {
       let droute = createDomRoute(route);
-      list.append(droute);
+      ulhtml += droute;
     }
   } else {
-    let info = document.createElement("p");
-    info.innerText = "NO ROUTES SAVED";
-    list.append(info);
+    ulhtml = `
+      <p>NO ROUTES SAVED</p>
+    `;
   }
-  container.append(list);
-  overlay.append(container);
-  document.body.append(overlay);
+
+  let html = `
+  <div class="routes-list-overlay">
+    <div class="routes-list"> 
+      <button class="close-btn">X</button>
+      <ul>
+        ${ulhtml}
+      </ul>
+    </div>
+  </div> 
+  `;
+
+  routesList.innerHTML = html;
 }
 
 function createDomRoute(route) {
-  let routeLi = document.createElement("li");
-  let routeName = document.createElement("p");
-  routeName.innerText = route.name;
-  let routeLoadBtn = document.createElement("button");
-  routeLoadBtn.innerText = "LOAD";
-  routeLoadBtn.addEventListener("click", () => {
-    loadRoute(route);
-  });
-  let routeDeleteBtn = document.createElement("button");
-  routeDeleteBtn.addEventListener("click", () => {
-    deleteRoute(route);
-  });
-  routeDeleteBtn.innerText = "DELETE";
-  routeLi.append(routeName, routeLoadBtn, routeDeleteBtn);
+  let routeLi = `
+    <li route-name="${route.name}">
+      <p>${route.name}</p>
+      <button class="load-btn">LOAD</button>
+      <button class="delete-btn">DELETE</button>
+    </li>
+  `;
 
   return routeLi;
 }
 
 function showListOfRoutes() {
-  fetchRoutes().then((routes) => {
-    createRoutesList(routes);
+  fetchRoutes().then((r) => {
+    routes = Object.values(r);
+
+    createRoutesList();
   });
 }
 
@@ -70,56 +93,51 @@ function fetchRoutes() {
   });
 }
 
-function loadRoute(route) {
+function loadRoute(routeName) {
+  let route = routes.find((v) => v.name === routeName);
   cities.splice(0, cities.length, ...route.cities);
 
-  let dcities = [];
+  let lihtml = ``;
   for (let city of cities) {
-    let li = getCityElement(city);
-    dcities.push(li);
+    lihtml += getCityElement(city);
   }
-  document.querySelector(".selected-cities").replaceChildren(...dcities);
+  selectedCities.innerHTML = lihtml;
 
   renderMap();
 }
 
-function deleteRoute(route) {
-  fetchRoutes().then((routes) => {
-    let arr = Object.values(routes);
-    const i = arr.findIndex((r) => r.name === route.name);
-    arr.splice(i, 1);
+function deleteRoute(routeName) {
+  const i = routes.findIndex((r) => r.name === routeName);
+  routes.splice(i, 1);
 
-    fetch(
-      "https://maps-app-f38f1-default-rtdb.europe-west1.firebasedatabase.app/routes.json",
-      {
-        method: "PUT",
-        body: JSON.stringify(arr),
-      }
-    )
-      .then(() => {
-        alert("Succesfully deleted route!", 5000);
-        updateRoutesList(arr);
-      })
-      .catch(() => {
-        console.error("PUT ERROR");
-      });
-  });
+  fetch(
+    "https://maps-app-f38f1-default-rtdb.europe-west1.firebasedatabase.app/routes.json",
+    {
+      method: "PUT",
+      body: JSON.stringify(routes),
+    }
+  )
+    .then(() => {
+      alert("Succesfully deleted route!", 5000);
+      updateRoutesList();
+    })
+    .catch(() => {
+      console.error("PUT ERROR");
+    });
 }
 
-function updateRoutesList(routes) {
-  let list = document.querySelector(".routes-list");
+function updateRoutesList() {
+  let list = document.querySelector(".routes-list > ul");
+
+  let ulhtml = ``;
 
   if (routes.length) {
-    let droutes = [];
     for (let route of routes) {
-      let droute = createDomRoute(route);
-      droutes.push(droute);
+      ulhtml += createDomRoute(route);
     }
-    list.replaceChildren(...droutes);
   } else {
-    console.log("create info");
-    let info = document.createElement("p");
-    info.innerText = "NO SAVED ROUTES";
-    list.replaceChildren(info);
+    ulhtml = `<p>NO SAVED ROUTES</p>`;
   }
+
+  list.innerHTML = ulhtml;
 }

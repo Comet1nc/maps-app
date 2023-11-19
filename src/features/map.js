@@ -2,6 +2,14 @@ import { directionsManager, map } from "../main.js";
 
 export let cities = [];
 
+export const selectedCities = document.querySelector(".selected-cities");
+
+selectedCities.addEventListener("click", (e) => {
+  if (e.target.classList.contains("delete-city")) {
+    deleteCity(e);
+  }
+});
+
 export function selectCity(city) {
   cities.push(city);
 
@@ -59,26 +67,23 @@ function togglePushpinForSingleCity() {
 }
 
 function renderListWithNewCity(city) {
-  let li = getCityElement(city);
-
-  document.querySelector(".selected-cities").appendChild(li);
+  selectedCities.innerHTML += getCityElement(city);
 }
 
 export function getCityElement(city) {
-  let li = document.createElement("li");
-  let p = document.createElement("p");
-  let btn = document.createElement("button");
+  return `
+    <li city-name="${city.name}">
+      <p>${city.name || ""}</p>
+      <button class="delete-city">X</button>
+    </li>
+  `;
+}
 
-  p.innerText = city.name || "";
-  btn.innerText = "X";
-  li.append(p, btn);
-
-  btn.addEventListener("click", () => {
-    li.remove();
-    let i = cities.findIndex((city1) => city1.name === city.name);
-    removeCityFromMap(i);
-    cities.splice(i, 1);
-  });
-
-  return li;
+function deleteCity(e) {
+  let item = e.target.closest("[city-name]");
+  item.remove();
+  let name = item.getAttribute("city-name");
+  let i = cities.findIndex((city) => city.name === name);
+  removeCityFromMap(i);
+  cities.splice(i, 1);
 }

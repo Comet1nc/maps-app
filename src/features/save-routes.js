@@ -1,16 +1,23 @@
 import { alert } from "./alerts.js";
 import { cities } from "./map.js";
 
-const formSave = createSaveForm();
-
 const minAmountOfCitiesToBuildRoute = 2;
 
-const saveBtn = document.querySelector(".btn-save-route");
+const openFormBtn = document.querySelector(".btn-save-route");
+const container = document.querySelector(".form-container");
 
-saveBtn.addEventListener("click", () => {
+container.addEventListener("click", (e) => {
+  if (e.target.classList.contains("save-route-btn")) {
+    saveRoute(e.target.previousElementSibling.value);
+  } else if (e.target.classList.contains("close-form-btn")) {
+    closeForm();
+  }
+});
+
+openFormBtn.addEventListener("click", () => {
   if (cities.length >= minAmountOfCitiesToBuildRoute) {
-    saveBtn.disabled = true;
-    showSaveForm();
+    openFormBtn.disabled = true;
+    showForm();
   } else {
     alert("You need at least 2 points to save route", 5000);
   }
@@ -24,43 +31,35 @@ function saveRoute(name) {
       body: JSON.stringify({ name, cities }),
     }
   )
-    .then(() => {
+    .then((r) => {
       alert("Succesfully saved route!", 5000);
     })
     .catch(() => {
       console.error("POST ERROR");
     })
     .finally(() => {
-      formSave.remove();
-      saveBtn.disabled = false;
+      container.innerHTML = "";
+      openFormBtn.disabled = false;
     });
 }
 
-function showSaveForm() {
-  document.body.append(formSave);
+function showForm() {
+  container.innerHTML = createSaveForm();
 }
 
 function createSaveForm() {
-  let overlay = document.createElement("div");
-  overlay.classList.add("form-overlay");
-  let container = document.createElement("div");
-  container.classList.add("form-container");
-  let input = document.createElement("input");
-  input.placeholder = "Enter route name";
-  let btnSave = document.createElement("button");
-  btnSave.innerText = "SAVE";
-  btnSave.addEventListener("click", () => {
-    saveRoute(input.value);
-  });
-  let btnCancel = document.createElement("button");
-  btnCancel.innerText = "CANCEL";
-  btnCancel.addEventListener("click", closeForm);
-  container.append(input, btnSave, btnCancel);
-  overlay.append(container);
-  return overlay;
+  return `
+    <div class="form-overlay">
+      <form class="form">
+        <input placeholder="Enter route name" type="text">
+        <button type="button" class="save-route-btn">SAVE</button>
+        <button type="button" class="close-form-btn">CANCEL</button>
+      </form>
+    </div>
+  `;
 }
 
-function closeForm(e) {
-  formSave.remove();
-  saveBtn.disabled = false;
+function closeForm() {
+  container.innerHTML = "";
+  openFormBtn.disabled = false;
 }
