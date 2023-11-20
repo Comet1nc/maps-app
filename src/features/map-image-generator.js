@@ -30,79 +30,76 @@ function openTab() {
 
   const ctx = canvas.getContext("2d");
 
+  setWhiteBackground(ctx);
+
   adjustScale(ctx);
 
   drawPath(ctx);
 }
 
-function createElements() {
-  let overlay = document.createElement("div");
-  overlay.classList.add("map-img-generator__overlay");
-  let wrapper = document.createElement("div");
-  wrapper.classList.add("map-img-generator__wrapper");
-  let btnClose = document.createElement("button");
-  btnClose.classList.add("btn-close");
-  btnClose.textContent = "X";
-  let btnDownload = document.createElement("button");
-  btnDownload.classList.add("download-img");
-  btnDownload.textContent = "Download";
-  return { overlay, wrapper, btnClose, btnDownload };
-}
-
 function createCanvas() {
   const newCanvas = document.createElement("canvas");
   newCanvas.classList.add("path-canvas");
-  newCanvas.width = "500";
-  newCanvas.height = "300";
+  newCanvas.width = "1000";
+  newCanvas.height = "600";
   canvas = newCanvas;
+}
+
+function createElements() {
+  let overlay = document.createElement("div");
+  overlay.classList.add("map-img-generator__overlay");
+
+  let wrapper = document.createElement("div");
+  wrapper.classList.add("map-img-generator__wrapper");
+
+  let btnClose = document.createElement("button");
+  btnClose.classList.add("btn-close");
+  btnClose.textContent = "X";
+
+  let btnDownload = document.createElement("button");
+  btnDownload.classList.add("download-img");
+  btnDownload.textContent = "Download";
+
+  return { overlay, wrapper, btnClose, btnDownload };
+}
+
+function setWhiteBackground(ctx) {
+  ctx.fillStyle = "white";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
 function drawPath(ctx) {
   if (cities.length < 2) return;
 
   cities.forEach((city, index) => {
-    ctx.beginPath();
-    ctx.arc(
-      city.location.longitude,
-      city.location.latitude,
-      0.3,
-      0,
-      2 * Math.PI
-    );
-    ctx.fillStyle = "black";
-    ctx.fill();
-    ctx.closePath();
+    drawCityPoint(ctx, city);
 
-    let posX;
-    let posY;
-
-    if (index > 0) {
-      const prevCity = cities[index - 1];
-
-      const angle = Math.atan2(
-        city.location.latitude - prevCity.location.latitude,
-        city.location.longitude - prevCity.location.longitude
-      );
-
-      const scaleX = 0.4;
-      const scaleY = 0.9;
-
-      posX = city.location.longitude + Math.cos(angle) * scaleX;
-      posY = city.location.latitude + Math.sin(angle) * scaleY;
-    } else {
-      posX = city.location.longitude * 0.95;
-      posY = city.location.latitude * 0.99;
-    }
-
-    ctx.font = "0.6px serif";
-    ctx.fillStyle = "black";
-    ctx.fillText(city.name, posX, posY);
+    const { posX, posY } = calculateTextPosition(city, index);
+    drawText(ctx, city.name, posX, posY);
   });
 
+  drawLineBetweenCities(ctx);
+}
+
+function drawCityPoint(ctx, city) {
   ctx.beginPath();
-  ctx.moveTo(cities[0].location.longitude, cities[0].location.latitude);
+  ctx.arc(
+    city.location.longitude,
+    city.location.latitude * -1,
+    0.3,
+    0,
+    2 * Math.PI
+  );
+  ctx.fillStyle = "black";
+  ctx.fill();
+  ctx.closePath();
+}
+
+function drawLineBetweenCities(ctx) {
+  ctx.beginPath();
+  ctx.moveTo(cities[0].location.longitude, cities[0].location.latitude * -1);
   cities.forEach((city) => {
-    ctx.lineTo(city.location.longitude, city.location.latitude);
+    ctx.lineTo(city.location.longitude, city.location.latitude * -1);
   });
   ctx.strokeStyle = "black";
   ctx.lineWidth = 0.05;
@@ -111,35 +108,43 @@ function drawPath(ctx) {
 
   ctx.stroke();
   ctx.closePath();
-  // ctx.save();
 }
 
-function calculateBoundingBox(cities) {
-  let minX = Infinity;
-  let minY = Infinity;
-  let maxX = -Infinity;
-  let maxY = -Infinity;
+function drawText(ctx, text, posX, posY) {
+  ctx.font = "0.6px serif";
+  ctx.fillStyle = "black";
+  ctx.fillText(text, posX, posY);
+}
 
-  for (const city of cities) {
-    minX = Math.min(minX, city.location.longitude);
-    minY = Math.min(minY, city.location.latitude);
-    maxX = Math.max(maxX, city.location.longitude);
-    maxY = Math.max(maxY, city.location.latitude);
+function calculateTextPosition(
+  city,
+  index,
+  scaleXfirstCity = 0.95,
+  scaleYfirstCity = 0.98,
+  scaleX = 0.4,
+  scaleY = 0.9
+) {
+  let posX, posY;
+  if (index > 0) {
+    const prevCity = cities[index - 1];
+
+    const angle = Math.atan2(
+      city.location.latitude * -1 - prevCity.location.latitude * -1,
+      city.location.longitude - prevCity.location.longitude
+    );
+
+    posX = city.location.longitude + Math.cos(angle) * scaleX;
+    posY = city.location.latitude * -1 + Math.sin(angle) * scaleY;
+  } else {
+    posX = city.location.longitude * scaleXfirstCity;
+    posY = city.location.latitude * -1 * scaleYfirstCity;
   }
-
-  let gap = 2.8;
-  minX -= gap;
-  minY -= gap;
-  maxX += gap;
-  maxY += gap;
-
-  return { minX, minY, maxX, maxY };
+  return { posX, posY };
 }
 
 function adjustScale(ctx) {
-  ctx.save(); // Save the current state of the context
+  ctx.save();
 
-  // Calculate the bounding box
   const { minX, minY, maxX, maxY } = calculateBoundingBox(cities);
 
   // Calculate scaling factors
@@ -151,15 +156,41 @@ function adjustScale(ctx) {
   const offsetX = -minX * scale;
   const offsetY = -minY * scale;
 
-  // Apply scaling and translation
   ctx.translate(offsetX, offsetY);
   ctx.scale(scale, scale);
 }
 
-function downloadImg() {
+function calculateBoundingBox(cities) {
+  let minX = Infinity;
+  let minY = Infinity;
+  let maxX = -Infinity;
+  let maxY = -Infinity;
+
+  for (const city of cities) {
+    minX = Math.min(minX, city.location.longitude);
+    minY = Math.min(minY, city.location.latitude * -1);
+    maxX = Math.max(maxX, city.location.longitude);
+    maxY = Math.max(maxY, city.location.latitude * -1);
+  }
+
+  let padding = 2.8;
+  minX -= padding;
+  minY -= padding;
+  maxX += padding;
+  maxY += padding;
+
+  return { minX, minY, maxX, maxY };
+}
+
+function downloadImg(fileType = ".png") {
   const dataURL = canvas.toDataURL("image/png");
   const a = document.createElement("a");
   a.href = dataURL;
-  a.download = "cities_map.png";
+
+  let fileName = "Mapa-";
+  cities.forEach((city) => {
+    fileName = fileName + city.name + "_";
+  });
+  a.download = fileName + fileType;
   a.click();
 }
