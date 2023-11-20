@@ -67,7 +67,7 @@ button:hover {
   gap: 20px;
   min-height: 50px;
   overflow-y: auto;
-  height: 72%;
+  height: 65%;
   margin: 0;
 }
 .selected-cities > li {
@@ -237,4 +237,49 @@ button:hover {
   width: 20%;
   font-size: 20px;
   border-radius: 5px;
+}
+.map-img-generator__overlay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 100;
+}
+.map-img-generator__wrapper {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  padding: 35px;
+  border-radius: 15px;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 600px;
+  height: 50%;
+  background-color: #fff;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
+    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+.map-img-generator__wrapper > button.btn-close {
+  position: absolute;
+  text-align: center;
+  padding: 0;
+  right: 6px;
+  top: 8px;
+  border-radius: 50%;
+  background-color: #d5d5d5;
+  height: 25px;
+  width: 25px;
+  margin: auto 0;
+}
+.map-img-generator__wrapper > button.download-img {
+  background-color: #d5d5d5;
+  font-size: 20px;
+  padding: 5px;
+  height: 10%;
 }

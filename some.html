@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Города на карте</title>
+  </head>
+  <body>
+    <canvas
+      id="cityCanvas"
+      width="500"
+      height="500"
+      style="border: 1px solid black"
+    ></canvas>
+    <button id="downloadBtn">Скачать карту</button>
+
+    <script>
+      // Ваши координаты городов
+      // const cities = [
+      //   { name: "Город1", latitude: 50, longitude: 30 },
+      //   { name: "Город2", latitude: 55, longitude: 35 },
+      //   { name: "Город3", latitude: 60, longitude: 40 },
+      // ];
+
+      function calculateBoundingBox(cities) {
+        let minX = Infinity;
+        let minY = Infinity;
+        let maxX = -Infinity;
+        let maxY = -Infinity;
+
+        for (const city of cities) {
+          minX = Math.min(minX, city.location.longitude);
+          minY = Math.min(minY, city.location.latitude * -1);
+          maxX = Math.max(maxX, city.location.longitude);
+          maxY = Math.max(maxY, city.location.latitude * -1);
+        }
+        let gap = 2;
+        minX -= gap;
+        minY -= gap;
+        maxX += gap;
+        maxY += gap;
+
+        return { minX, minY, maxX, maxY };
+      }
+
+      function adjustScale(ctx) {
+        ctx.save(); // Save the current state of the context
+
+        // Calculate the bounding box
+        const { minX, minY, maxX, maxY } = calculateBoundingBox(cities);
+
+        // Calculate scaling factors
+        const scaleX = (canvas.width * 0.9) / (maxX - minX);
+        const scaleY = (canvas.height * 0.9) / (maxY - minY);
+        const scale = Math.min(scaleX, scaleY);
+
+        // Calculate translation factors
+        const offsetX = -minX * scale;
+        const offsetY = -minY * scale;
+
+        // Apply scaling and translation
+        ctx.translate(offsetX, offsetY);
+        let xs = 0;
+        ctx.scale(scale, scale);
+      }
+
+      const cities = [
+        {
+          location: {
+            altitude: 0,
+            altitudeReference: -1,
+            latitude: 51.1105,
+            longitude: 17.0256,
+          },
+          name: "Wrocław",
+        },
+        {
+          location: {
+            altitude: 0,
+            altitudeReference: -1,
+            latitude: 52.4083,
+            longitude: 16.9336,
+          },
+          name: "Poznań",
+        },
+        {
+          location: {
+            altitude: 0,
+            altitudeReference: -1,
+            latitude: 52.235,
+            longitude: 21.0085,
+          },
+          name: "Warszawa",
+        },
+      ];
+
+      // Получаем canvas и контекст
+      const canvas = document.getElementById("cityCanvas");
+      const ctx = canvas.getContext("2d");
+
+      adjustScale(ctx);
+
+      // Рисуем точки
+      cities.forEach((city) => {
+        ctx.beginPath();
+        ctx.arc(
+          city.location.longitude,
+          city.location.latitude * -1,
+          0.4,
+          0,
+          2 * Math.PI
+        );
+        ctx.fillStyle = "red";
+        ctx.fill();
+        ctx.closePath();
+      });
+
+      // Соединяем линиями
+      ctx.beginPath();
+      ctx.moveTo(cities[0].location.longitude, cities[0].location.latitude);
+      cities.forEach((city) => {
+        ctx.lineTo(city.location.longitude, city.location.latitude * -1);
+      });
+      ctx.strokeStyle = "blue";
+      ctx.lineWidth = 0.1;
+      ctx.stroke();
+      ctx.closePath();
+
+      // Добавляем кнопку для скачивания
+      const downloadBtn = document.getElementById("downloadBtn");
+      downloadBtn.addEventListener("click", () => {
+        const dataURL = canvas.toDataURL("image/png");
+        const a = document.createElement("a");
+        a.href = dataURL;
+        a.download = "cities_map.png";
+        a.click();
+      });
+    </script>
+  </body>
+</html>
