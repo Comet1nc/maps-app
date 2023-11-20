@@ -28,7 +28,7 @@ function openTab() {
   overlay.append(wrapper);
   container.append(overlay);
 
-  const ctx = canvas.getContext("2d");
+  const ctx = canvas.getContext("2d", { willReadFrequently: true });
 
   setWhiteBackground(ctx);
 
