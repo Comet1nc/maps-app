@@ -10,6 +10,17 @@ window.onload = () => {
   useMicrosoftMaps();
 };
 
+const m = document.querySelector("#myMap");
+
+resizeMap();
+window.addEventListener("resize", (e) => {
+  resizeMap();
+});
+
+function resizeMap() {
+  m.style.width = window.innerWidth * 0.6 + "px";
+}
+
 function useMicrosoftMaps() {
   map = new Microsoft.Maps.Map("#myMap", {
     center: new Microsoft.Maps.Location(52.235, 20.0085),
