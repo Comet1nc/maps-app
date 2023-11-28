@@ -2,9 +2,12 @@ import { selectCity } from "./features/map.js";
 import * as saveroutes from "./features/save-routes.js";
 import * as loadroutes from "./features/load-routes.js";
 import * as generator from "./features/map-image-generator.js";
+import * as imgconf from "./features/map-image-configure.js";
 
 export let map;
 export let directionsManager;
+
+("use strict");
 
 window.onload = () => {
   useMicrosoftMaps();

@@ -5,6 +5,9 @@ body {
   height: 100%;
   font-family: Verdana, sans-serif;
 }
+input {
+  margin: 0;
+}
 p {
   margin: 0;
 }
@@ -160,9 +163,9 @@ button:hover {
   width: 600px;
   height: 50px;
   background-color: #fff;
-  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
-    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
-    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px,
+    rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px,
+    rgba(0, 0, 0, 0.09) 0px -3px 5px;
 }
 .form > input {
   border-radius: 0;
@@ -195,9 +198,9 @@ button:hover {
   width: 600px;
   height: 50%;
   background-color: #fff;
-  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
-    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
-    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px,
+    rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px,
+    rgba(0, 0, 0, 0.09) 0px -3px 5px;
 }
 .routes-list > button {
   position: absolute;
@@ -261,12 +264,17 @@ button:hover {
   right: 0;
   top: 0;
   bottom: 0;
-  width: 600px;
-  height: 50%;
+  width: 60%;
+  height: 80%;
   background-color: #fff;
-  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
-    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
-    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px,
+    rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px,
+    rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+.canvas-container {
+  display: flex;
+  justify-content: center;
+  height: 400px;
 }
 .map-img-generator__wrapper > button.btn-close {
   position: absolute;
@@ -285,4 +293,36 @@ button:hover {
   font-size: 20px;
   padding: 5px;
   height: 10%;
+}
+.map-img-generator__wrapper > .img-styles-configuration {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 25px 0;
+}
+.map-img-generator__wrapper > .img-styles-configuration > .styles-config-container {
+  display: flex;
+  gap: 10px;
+  height: 25px;
+  justify-content: flex-start;
+  align-items: center;
+  font-weight: 600;
+}
+.map-img-generator__wrapper > .img-styles-configuration > .styles-config-container > p {
+  font-weight: initial;
+  color: rgb(74, 74, 74);
+}
+.size-input-container > input {
+  margin-right: 15px;
+  height: 20px;
+  width: 20px;
+}
+
+.refresh-img {
+  position: absolute;
+  right: 86px;
+  bottom: 175px;
+  background-color: #d5d5d5;
+  font-size: 20px;
+  padding: 15px;
 }
