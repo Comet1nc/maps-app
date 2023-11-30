@@ -1,3 +1,5 @@
+import { alert } from "./alerts.js";
+import { debouncedRefresh } from "./debounce.js";
 import { createUpdatedMapCanvas, downloadImg, mapOptions } from "./map-image-configure.js";
 import { cities } from "./map.js";
 
@@ -16,6 +18,10 @@ container.addEventListener("click", (e) => {
 });
 
 getRouteImgBtn.addEventListener("click", () => {
+  if (cities.length < 2) {
+    alert("You need at least 2 points to save route", 5000);
+    return;
+  }
   getRouteImgBtn.disabled = true;
   openTab();
 });
@@ -36,11 +42,11 @@ function openTab() {
   drawPath(context);
 }
 
-function appendElements({ overlay, wrapper, btnClose, btnDownload, configEl, btnRefresh }) {
+function appendElements({ overlay, wrapper, btnClose, btnDownload, configEl }) {
   let canvasContainer = document.createElement("div");
   canvasContainer.append(canvas);
   canvasContainer.classList.add("canvas-container");
-  wrapper.append(btnClose, canvasContainer, configEl, btnDownload, btnRefresh);
+  wrapper.append(btnClose, canvasContainer, configEl, btnDownload);
   overlay.append(wrapper);
   container.append(overlay);
 }
@@ -68,19 +74,16 @@ function createElements() {
   btnDownload.classList.add("download-img");
   btnDownload.textContent = "Download";
 
-  let btnRefresh = document.createElement("button");
-  btnRefresh.classList.add("refresh-img");
-  btnRefresh.textContent = "Refresh";
-  btnRefresh.addEventListener("click", () => {
-    canvas.remove();
-    const newCanvas = createUpdatedMapCanvas(mapOptions);
-    canvas = newCanvas;
-    document.querySelector(".canvas-container").append(canvas);
-  });
-
   let configEl = createStylesConfigElements();
 
-  return { overlay, wrapper, btnClose, btnDownload, configEl, btnRefresh };
+  return { overlay, wrapper, btnClose, btnDownload, configEl };
+}
+
+export function updateCanvasStyles() {
+  canvas.remove();
+  const newCanvas = createUpdatedMapCanvas(mapOptions);
+  canvas = newCanvas;
+  document.querySelector(".canvas-container").append(canvas);
 }
 
 function createStylesConfigElements() {
@@ -89,6 +92,9 @@ function createStylesConfigElements() {
   const pointsConfigElements = createPointsConfigElements();
 
   let container = document.createElement("div");
+  container.addEventListener("input", (e) => {
+    debouncedRefresh();
+  });
   container.classList.add("img-styles-configuration");
   container.append(sizeConfigElements, lineConfigElements, pointsConfigElements);
 
